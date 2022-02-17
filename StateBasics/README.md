@@ -14,7 +14,7 @@
 ![Note 2](Images/state_2.png "State hoisting")
 
 ## Later -> Experiments on Accompanist Insets
-[Insets for Jetpack Compose](https://google.github.io/accompanist/insets/)
+[Insets for Jetpack Compose](https://google.github.io/accompanist/insets/)  
 [Android Jetpack Compose: Inset Padding Made Easy](https://medium.com/mobile-app-development-publication/android-jetpack-compose-inset-padding-made-easy-5f156a790979)
 
 ## Later -> Basics
