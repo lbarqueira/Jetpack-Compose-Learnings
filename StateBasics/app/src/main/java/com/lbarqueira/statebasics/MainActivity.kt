@@ -4,14 +4,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModel
 import com.lbarqueira.statebasics.ui.theme.StateBasicsTheme
+import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.statusBarsPadding
 
 /**
  * A ViewModel extracts _state_ from the UI and defines _events_ that can update it.
@@ -45,11 +51,17 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             StateBasicsTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    HelloScreen(helloViewModel)
+                ProvideWindowInsets {
+                    // A surface container using the 'background' color from the theme
+                    Surface(
+                        color = MaterialTheme.colors.background,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        HelloScreen(modifier = Modifier.statusBarsPadding(), helloViewModel)
+                    }
                 }
             }
         }
@@ -60,7 +72,7 @@ class MainActivity : ComponentActivity() {
 // This composable will be a bridge between the state stored in our ViewModel and the
 // HelloInput composable.
 @Composable
-private fun HelloScreen(helloViewModel: HelloViewModel) {
+private fun HelloScreen(modifier: Modifier = Modifier, helloViewModel: HelloViewModel) {
     // helloViewModel follows the Lifecycle as the Activity or Fragment that calls this
     // composable function.
 
@@ -70,6 +82,7 @@ private fun HelloScreen(helloViewModel: HelloViewModel) {
 
     // Alternatively, you can also generate a lambda that calls a single method using the method reference syntax.
     HelloInput(
+        modifier = modifier,
         name = helloViewModel.name.value,
         onNameChange = helloViewModel::onNameChanged
     )
@@ -78,22 +91,64 @@ private fun HelloScreen(helloViewModel: HelloViewModel) {
 
 @Composable
 private fun HelloInput(
+    modifier: Modifier = Modifier,
     name: String,
     onNameChange: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxHeight()
-            .fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        TextGroup(
+            "Top Text",
+            modifier = modifier.fillMaxWidth(),
+            style = MaterialTheme.typography.h3,
+            textAlign = TextAlign.Center,
+        )
+        Box(
+            modifier = modifier
+                .background(Color.Magenta)
+                .fillMaxWidth()
+                .weight(1f)
+        )
         Text(name)
         TextField(
             value = name,
             onValueChange = onNameChange,
             label = { Text("Label") }
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Box(
+            modifier = modifier
+                .background(Color.Magenta)
+                .fillMaxWidth()
+                .weight(1f)
+        )
+        TextGroup(
+            "Bottom Text",
+            modifier = modifier.fillMaxWidth(),
+            style = MaterialTheme.typography.h3,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun TextGroup(
+    text: String,
+    style: TextStyle,
+    textAlign: TextAlign?,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .background(Color.Yellow)
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = text,
+            modifier = modifier,
+            style = style,
+            textAlign = textAlign
+        )
     }
 }
